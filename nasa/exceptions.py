@@ -1,14 +1,17 @@
+from typing import Text
+
+
 class BaseNASAException(Exception):
-    pass
+    CODE: Text = "NASA-001"
 
 
 class NASAHTTPError(BaseNASAException):
-    pass
+    CODE: Text = "NASA-002"
 
 
 class InvalidNeoAPITypeError(BaseNASAException):
-    pass
+    CODE: Text = "NASA-003"
 
 
 class InvalidDateConvertible(BaseNASAException):
-    pass
+    CODE: Text = "NASA-004"
