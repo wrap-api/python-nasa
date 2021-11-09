@@ -1,13 +1,32 @@
 import warnings
 from decimal import Decimal
 from datetime import date, datetime
-from typing import Dict, Text, Union, Optional
+from typing import (
+    Dict,
+    Text,
+    Union,
+    Optional,
+    Mapping,
+    List,
+)
 
-from nasa.exceptions import InvalidDateConvertible
+from nasa.decorators import NASADecorator
+
 
 IsoDateConvertible = Union[int, float, Decimal, Text, date, datetime]
+JSONType = Union[
+    Text,
+    int,
+    float,
+    bool,
+    None,
+    Mapping[str, "JSONType"],
+    List["JSONType"],
+]
 
+main_decorator: NASADecorator = NASADecorator()
 
+main_decorator.decorate_all_methods(main_decorator.catch_unidentidied_error)
 class IsoDate:
     UNIT_CONVERSION: Dict = {
         "s": 1,
