@@ -11,6 +11,7 @@ from typing import (
 )
 
 from nasa.decorators import NASADecorator
+from nasa.warnings import InvalidInputWarning
 
 
 IsoDateConvertible = Union[int, float, Decimal, Text, date, datetime]
@@ -27,6 +28,8 @@ JSONType = Union[
 main_decorator: NASADecorator = NASADecorator()
 
 main_decorator.decorate_all_methods(main_decorator.catch_unidentidied_error)
+
+
 class IsoDate:
     UNIT_CONVERSION: Dict = {
         "s": 1,
@@ -53,7 +56,7 @@ class IsoDate:
         if type(arg) in {int, float, Decimal}:
             if unit not in self.UNIT_CONVERSION.keys():
                 message: Text = f"Invalid `unit` {unit}, will use default unit `s`. Valid unit values are {list(self.UNIT_CONVERSION.keys())}"
-                warnings.warn(message, UserWarning)
+                warnings.warn(message, InvalidInputWarning)
             unix_seconds = arg / self.UNIT_CONVERSION.get(unit, "s")
             self.dt: datetime = datetime.utcfromtimestamp(unix_seconds)
         elif type(arg) is str:
@@ -62,7 +65,7 @@ class IsoDate:
             self.dt: Union[date, datetime] = arg
         else:
             message: Text = f"Invalid type {type(arg)} for `arg`, will set `arg` to None. Valid types for `arg` are [int, float, Decimal, str, date, datetime]"
-            warnings.warn(message, UserWarning)
+            warnings.warn(message, InvalidInputWarning)
             self.dt: None = None
 
     def value(self) -> Optional[Text]:

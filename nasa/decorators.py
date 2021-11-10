@@ -6,9 +6,11 @@ from nasa.exceptions import NASAUnidentifiedError
 class NASADecorator:
     def __init__(self, **kwargs: Dict[Text, Any]) -> None:
         self.params = kwargs
-    
+
     @staticmethod
-    def catch_unidentidied_error(*args: Tuple[Any], **kwargs: Dict[Text, Any]) -> Callable:
+    def catch_unidentidied_error(
+        *args: Tuple[Any], **kwargs: Dict[Text, Any]
+    ) -> Callable:
         def wrapper(function: Callable) -> Any:
             try:
                 result: Any = function(*args, **kwargs)
@@ -16,8 +18,9 @@ class NASADecorator:
                 raise NASAUnidentifiedError(str(error))
             else:
                 return result
+
         return wrapper
-    
+
     @staticmethod
     def decorate_all_methods(decorator: Callable) -> Callable:
         def decorate(cls: Type):
@@ -25,4 +28,5 @@ class NASADecorator:
                 if callable(getattr(cls, attr)):
                     setattr(cls, attr, decorator(getattr(cls, attr)))
             return cls
+
         return decorate
