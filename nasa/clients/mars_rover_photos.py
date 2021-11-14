@@ -2,11 +2,7 @@ from typing import Dict, List, Optional, Set, Text, Tuple, Union
 
 from PIL.ImageFile import ImageFile
 from nasa.clients.base import BaseClient
-from nasa.exceptions import (
-    InvalidMarsCamera,
-    InvalidMarsRover,
-    InvalidMarsRoverCamera,
-)
+from nasa.exceptions import NASAInvalidInput
 from nasa.typing import IsoDate, IsoDateConvertible, JSONType
 from nasa.utils import get_urls_images
 
@@ -32,9 +28,9 @@ class MarsRoverPhotosClient(BaseClient):
             get_images (bool, optional): Whether to get images or not. Defaults to False.
 
         Raises:
-            InvalidMarsRover: Raised when Mars Rover input is invalid
-            InvalidMarsCamera: Raised when Mars Cameta input is invalid
-            InvalidMarsRoverCamera: Raised when the combination of Mars Rover and Camera is invalid
+            NASAInvalidInput: Raised when Mars Rover input is invalid
+            NASAInvalidInput: Raised when Mars Cameta input is invalid
+            NASAInvalidInput: Raised when the combination of Mars Rover and Camera is invalid
 
         Returns:
             Union[JSONType, Dict[Text, Union[JSONType, ImageFile]]]: Only JSON if get_images is False else will includes the images
@@ -61,30 +57,33 @@ class MarsRoverPhotosClient(BaseClient):
             ("curiousity", "MARDI"),
             ("curiousity", "NAVCAM"),
             ("curiousity", "PANCAM"),
+            ("curiousity", "all"),
             ("opportunity", "FHAZ"),
             ("opportunity", "RHAZ"),
             ("opportunity", "NAVCAM"),
             ("opportunity", "PANCAM"),
             ("opportunity", "MINITES"),
+            ("opportunity", "all"),
             ("spirit", "FHAZ"),
             ("spirit", "RHAZ"),
             ("spirit", "NAVCAM"),
             ("spirit", "PANCAM"),
             ("spirit", "MINITES"),
+            ("spirit", "all"),
         }
         if rover not in rovers:
             message: Text = (
                 f"Invalid rover {rover}. Valid rover values are {tuple(rovers)}"
             )
-            raise InvalidMarsRover(message)
+            raise NASAInvalidInput(message)
         if camera not in cameras:
             message: Text = (
                 f"Invalid camera {camera}. Valid rover values are {tuple(cameras)}"
             )
-            raise InvalidMarsCamera(message)
+            raise NASAInvalidInput(message)
         if (rover, camera) not in rover_cameras:
             message: Text = f"Invalid rover and camera combination {(rover, camera)}. Valid rover camera combinations are {tuple(rover_cameras)}"
-            raise InvalidMarsRoverCamera(message)
+            raise NASAInvalidInput(message)
         iso_earth_date: Optional[Text] = IsoDate(earth_date).value()
         if iso_earth_date is not None:
             sol = None

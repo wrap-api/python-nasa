@@ -1,4 +1,5 @@
 from typing import Text
+import nasa
 from nasa.clients.apod import ApodClient
 from nasa.clients.donki import DonkiClient
 from nasa.clients.earth import EarthClient
@@ -8,8 +9,13 @@ from nasa.clients.mars_rover_photos import MarsRoverPhotosClient
 from nasa.clients.neo import NeoClient
 from nasa.clients.tech_transfer import TechTransferClient
 from nasa.clients.techport import TechPortClient
+from nasa.decorators import NASADecorator
 
 
+decorator: NASADecorator = NASADecorator()
+
+
+# @decorator.decorate_all_methods(decorator.catch_unidentidied_error)
 class Client(
     ApodClient,
     DonkiClient,
@@ -21,4 +27,4 @@ class Client(
     TechTransferClient,
     TechPortClient,
 ):
-    VERSION: Text = "v0.1.3"
+    VERSION: Text = nasa.__version__

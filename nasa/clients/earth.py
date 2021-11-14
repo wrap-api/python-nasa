@@ -3,7 +3,7 @@ import warnings
 from PIL.ImageFile import ImageFile
 
 from nasa.clients.base import BaseClient
-from nasa.exceptions import InvalidEarthAPIType
+from nasa.exceptions import NASAInvalidInput
 from nasa.typing import IsoDate, IsoDateConvertible, JSONType
 from nasa.warnings import AttributesCollussionWarning
 
@@ -29,7 +29,7 @@ class EarthClient(BaseClient):
             cloud_score (Optional[bool], optional): Imagery API type only. [NOT CURRENTLY AVAILABLE!!!!] calculate the percentage of the image covered by clouds. Defaults to False.
 
         Raises:
-            InvalidEarthAPIType: Raised when the provided API Type is not valid
+            NASAInvalidInput: Raised when the provided API Type is not valid
 
         Returns:
             Union[JSONType, ImageFile]: Imagery API will response with image which will be handled using PIL. Else, it'll response with JSON
@@ -37,7 +37,7 @@ class EarthClient(BaseClient):
         api_types: Set[Text] = {"imagery", "assets"}
         if api_type not in api_types:
             message: Text = f"Invalid api_type {api_type}. Valid api_type values are {tuple(api_types)}"
-            raise InvalidEarthAPIType(message)
+            raise NASAInvalidInput(message)
         if api_type != "imagery" and cloud_score is not None:
             message: Text = "cloud_score shouldn't be filled if the api_type is not imagery. Set it to None"
             warnings.warn(message, AttributesCollussionWarning)
@@ -100,10 +100,4 @@ class EarthClient(BaseClient):
         Returns:
             JSONType: Parsed response from the API
         """
-        return self.earth(
-            api_type="assets",
-            lat=lat,
-            lon=lon,
-            dim=dim,
-            date=date,
-        )
+        return self.earth(api_type="assets", lat=lat, lon=lon, dim=dim, date=date)

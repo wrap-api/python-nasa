@@ -1,7 +1,7 @@
 from typing import Dict, Optional, Set, Text, Union
 import warnings
 from nasa.clients.base import BaseClient
-from nasa.exceptions import InvalidDonkiAPIType, InvalidDonkiNotificationType
+from nasa.exceptions import NASAInvalidInput
 from nasa.typing import IsoDate, IsoDateConvertible, JSONType
 from nasa.warnings import AttributesCollussionWarning
 
@@ -22,8 +22,8 @@ class DonkiClient(BaseClient):
 
         Args:
             api_type (Text): API Type to hit
-            start_date (Optional[IsoDateConvertible], optional): Start date of data retrieved. Defaults to None.
-            end_date (Optional[IsoDateConvertible], optional): End date of data retrieved. Defaults to None.
+            start_date (Optional[IsoDateConvertible] = None, optional): Start date of data retrieved. Defaults to None.
+            end_date (Optional[IsoDateConvertible] = None, optional): End date of data retrieved. Defaults to None.
             most_accurate_only (bool, optional): CMEAnalysis API only. If False, it'll query all, if True will query the most accurate only. Defaults to True.
             speed (Optional[int], optional): CMEAnalysis API only. Query the speed value. Defaults to None.
             half_angle (Optional[int], optional): CMEAnalysis API only. Query the half angle. Defaults to None.
@@ -31,8 +31,8 @@ class DonkiClient(BaseClient):
             notification_type (Optional[Text], optional): notifications API only. Defaults to None.
 
         Raises:
-            InvalidDonkiAPIType: Raises when the API Type given is invalid
-            InvalidDonkiNotificationType: Raises when the Notification Type given is invalid
+            NASAInvalidInput: Raises when the API Type given is invalid
+            NASAInvalidInput: Raises when the Notification Type given is invalid
 
         Returns:
             JSONType: Parsed response body from the API
@@ -63,7 +63,7 @@ class DonkiClient(BaseClient):
         }
         if api_type not in api_types:
             message: Text = f"Invalid api_type {api_type}. Valid api_type values are {tuple(api_types)}"
-            raise InvalidDonkiAPIType(message)
+            raise NASAInvalidInput(message)
         if api_type != "CMEAnalysis" and (
             most_accurate_only is not None
             or speed is not None
@@ -80,9 +80,12 @@ class DonkiClient(BaseClient):
             message: Text = "notification_type shouldn't be filled when the api_type is not notifications. Set it to None"
             warnings.warn(message, AttributesCollussionWarning)
             notification_type = None
-        if notification_type not in notification_types:
+        if (
+            notification_type is not None
+            and notification_type not in notification_types
+        ):
             message: Text = f"Invalid notification_type value {notification_type}. Valid notification_type values are {tuple(notification_types)}"
-            raise InvalidDonkiNotificationType(message)
+            raise NASAInvalidInput(message)
         iso_start_date: Text = IsoDate(start_date).value()
         iso_end_date: Text = IsoDate(end_date).value()
         path: Text = f"/DONKI/{api_type}"
@@ -99,14 +102,14 @@ class DonkiClient(BaseClient):
 
     def donki_cme(
         self,
-        start_date: Optional[IsoDateConvertible],
-        end_date: Optional[IsoDateConvertible],
+        start_date: Optional[IsoDateConvertible] = None,
+        end_date: Optional[IsoDateConvertible] = None,
     ) -> JSONType:
         """The Space Weather Database Of Notifications, Knowledge, Information. Coronal Mass Ejection API
 
         Args:
-            start_date (Optional[IsoDateConvertible], optional): Start date of data retrieved. Defaults to None.
-            end_date (Optional[IsoDateConvertible], optional): End date of data retrieved. Defaults to None.
+            start_date (Optional[IsoDateConvertible] = None, optional): Start date of data retrieved. Defaults to None.
+            end_date (Optional[IsoDateConvertible] = None, optional): End date of data retrieved. Defaults to None.
 
         Returns:
             JSONType: Parsed response body from the API
@@ -115,8 +118,8 @@ class DonkiClient(BaseClient):
 
     def donki_cme_analysis(
         self,
-        start_date: Optional[IsoDateConvertible],
-        end_date: Optional[IsoDateConvertible],
+        start_date: Optional[IsoDateConvertible] = None,
+        end_date: Optional[IsoDateConvertible] = None,
         most_accurate_only: bool = True,
         speed: Optional[int] = None,
         half_angle: Optional[int] = None,
@@ -125,8 +128,8 @@ class DonkiClient(BaseClient):
         """The Space Weather Database Of Notifications, Knowledge, Information. Coronal Mass Ejection Analysis API
 
         Args:
-            start_date (Optional[IsoDateConvertible], optional): Start date of data retrieved. Defaults to None.
-            end_date (Optional[IsoDateConvertible], optional): End date of data retrieved. Defaults to None.
+            start_date (Optional[IsoDateConvertible] = None, optional): Start date of data retrieved. Defaults to None.
+            end_date (Optional[IsoDateConvertible] = None, optional): End date of data retrieved. Defaults to None.
             most_accurate_only (bool, optional): If False, it'll query all, if True will query the most accurate only. Defaults to True.
             speed (Optional[int], optional): Query the speed value. Defaults to None.
             half_angle (Optional[int], optional): Query the half angle. Defaults to None.
@@ -147,14 +150,14 @@ class DonkiClient(BaseClient):
 
     def donki_gst(
         self,
-        start_date: Optional[IsoDateConvertible],
-        end_date: Optional[IsoDateConvertible],
+        start_date: Optional[IsoDateConvertible] = None,
+        end_date: Optional[IsoDateConvertible] = None,
     ) -> JSONType:
         """The Space Weather Database Of Notifications, Knowledge, Information. Geomagnetic Storm API
 
         Args:
-            start_date (Optional[IsoDateConvertible], optional): Start date of data retrieved. Defaults to None.
-            end_date (Optional[IsoDateConvertible], optional): End date of data retrieved. Defaults to None.
+            start_date (Optional[IsoDateConvertible] = None, optional): Start date of data retrieved. Defaults to None.
+            end_date (Optional[IsoDateConvertible] = None, optional): End date of data retrieved. Defaults to None.
 
         Returns:
             JSONType: Parsed response body from the API
@@ -163,14 +166,14 @@ class DonkiClient(BaseClient):
 
     def donki_ips(
         self,
-        start_date: Optional[IsoDateConvertible],
-        end_date: Optional[IsoDateConvertible],
+        start_date: Optional[IsoDateConvertible] = None,
+        end_date: Optional[IsoDateConvertible] = None,
     ) -> JSONType:
         """The Space Weather Database Of Notifications, Knowledge, Information. Interplanetary Shock API
 
         Args:
-            start_date (Optional[IsoDateConvertible], optional): Start date of data retrieved. Defaults to None.
-            end_date (Optional[IsoDateConvertible], optional): End date of data retrieved. Defaults to None.
+            start_date (Optional[IsoDateConvertible] = None, optional): Start date of data retrieved. Defaults to None.
+            end_date (Optional[IsoDateConvertible] = None, optional): End date of data retrieved. Defaults to None.
 
         Returns:
             JSONType: Parsed response body from the API
@@ -179,14 +182,14 @@ class DonkiClient(BaseClient):
 
     def donki_flr(
         self,
-        start_date: Optional[IsoDateConvertible],
-        end_date: Optional[IsoDateConvertible],
+        start_date: Optional[IsoDateConvertible] = None,
+        end_date: Optional[IsoDateConvertible] = None,
     ) -> JSONType:
         """The Space Weather Database Of Notifications, Knowledge, Information. Solar Flare API
 
         Args:
-            start_date (Optional[IsoDateConvertible], optional): Start date of data retrieved. Defaults to None.
-            end_date (Optional[IsoDateConvertible], optional): End date of data retrieved. Defaults to None.
+            start_date (Optional[IsoDateConvertible] = None, optional): Start date of data retrieved. Defaults to None.
+            end_date (Optional[IsoDateConvertible] = None, optional): End date of data retrieved. Defaults to None.
 
         Returns:
             JSONType: Parsed response body from the API
@@ -195,14 +198,14 @@ class DonkiClient(BaseClient):
 
     def donki_sep(
         self,
-        start_date: Optional[IsoDateConvertible],
-        end_date: Optional[IsoDateConvertible],
+        start_date: Optional[IsoDateConvertible] = None,
+        end_date: Optional[IsoDateConvertible] = None,
     ) -> JSONType:
         """The Space Weather Database Of Notifications, Knowledge, Information. Solar Energetic Particle API
 
         Args:
-            start_date (Optional[IsoDateConvertible], optional): Start date of data retrieved. Defaults to None.
-            end_date (Optional[IsoDateConvertible], optional): End date of data retrieved. Defaults to None.
+            start_date (Optional[IsoDateConvertible] = None, optional): Start date of data retrieved. Defaults to None.
+            end_date (Optional[IsoDateConvertible] = None, optional): End date of data retrieved. Defaults to None.
 
         Returns:
             JSONType: Parsed response body from the API
@@ -211,14 +214,14 @@ class DonkiClient(BaseClient):
 
     def donki_mpc(
         self,
-        start_date: Optional[IsoDateConvertible],
-        end_date: Optional[IsoDateConvertible],
+        start_date: Optional[IsoDateConvertible] = None,
+        end_date: Optional[IsoDateConvertible] = None,
     ) -> JSONType:
         """The Space Weather Database Of Notifications, Knowledge, Information. Magnetopause Crossing API
 
         Args:
-            start_date (Optional[IsoDateConvertible], optional): Start date of data retrieved. Defaults to None.
-            end_date (Optional[IsoDateConvertible], optional): End date of data retrieved. Defaults to None.
+            start_date (Optional[IsoDateConvertible] = None, optional): Start date of data retrieved. Defaults to None.
+            end_date (Optional[IsoDateConvertible] = None, optional): End date of data retrieved. Defaults to None.
 
         Returns:
             JSONType: Parsed response body from the API
@@ -227,14 +230,14 @@ class DonkiClient(BaseClient):
 
     def donki_rbe(
         self,
-        start_date: Optional[IsoDateConvertible],
-        end_date: Optional[IsoDateConvertible],
+        start_date: Optional[IsoDateConvertible] = None,
+        end_date: Optional[IsoDateConvertible] = None,
     ) -> JSONType:
         """The Space Weather Database Of Notifications, Knowledge, Information. Radiation Belt Enhancement API
 
         Args:
-            start_date (Optional[IsoDateConvertible], optional): Start date of data retrieved. Defaults to None.
-            end_date (Optional[IsoDateConvertible], optional): End date of data retrieved. Defaults to None.
+            start_date (Optional[IsoDateConvertible] = None, optional): Start date of data retrieved. Defaults to None.
+            end_date (Optional[IsoDateConvertible] = None, optional): End date of data retrieved. Defaults to None.
 
         Returns:
             JSONType: Parsed response body from the API
@@ -243,14 +246,14 @@ class DonkiClient(BaseClient):
 
     def donki_hss(
         self,
-        start_date: Optional[IsoDateConvertible],
-        end_date: Optional[IsoDateConvertible],
+        start_date: Optional[IsoDateConvertible] = None,
+        end_date: Optional[IsoDateConvertible] = None,
     ) -> JSONType:
         """The Space Weather Database Of Notifications, Knowledge, Information. Hight Speed Stream API
 
         Args:
-            start_date (Optional[IsoDateConvertible], optional): Start date of data retrieved. Defaults to None.
-            end_date (Optional[IsoDateConvertible], optional): End date of data retrieved. Defaults to None.
+            start_date (Optional[IsoDateConvertible] = None, optional): Start date of data retrieved. Defaults to None.
+            end_date (Optional[IsoDateConvertible] = None, optional): End date of data retrieved. Defaults to None.
 
         Returns:
             JSONType: Parsed response body from the API
@@ -259,35 +262,33 @@ class DonkiClient(BaseClient):
 
     def donki_wsa_enlil_simulations(
         self,
-        start_date: Optional[IsoDateConvertible],
-        end_date: Optional[IsoDateConvertible],
+        start_date: Optional[IsoDateConvertible] = None,
+        end_date: Optional[IsoDateConvertible] = None,
     ) -> JSONType:
         """The Space Weather Database Of Notifications, Knowledge, Information. WSA+EnlilSimulation API
 
         Args:
-            start_date (Optional[IsoDateConvertible], optional): Start date of data retrieved. Defaults to None.
-            end_date (Optional[IsoDateConvertible], optional): End date of data retrieved. Defaults to None.
+            start_date (Optional[IsoDateConvertible] = None, optional): Start date of data retrieved. Defaults to None.
+            end_date (Optional[IsoDateConvertible] = None, optional): End date of data retrieved. Defaults to None.
 
         Returns:
             JSONType: Parsed response body from the API
         """
         return self.donki(
-            api_type="WSAEnlilSimulations",
-            start_date=start_date,
-            end_date=end_date,
+            api_type="WSAEnlilSimulations", start_date=start_date, end_date=end_date
         )
 
     def donki_notifications(
         self,
-        start_date: Optional[IsoDateConvertible],
-        end_date: Optional[IsoDateConvertible],
+        start_date: Optional[IsoDateConvertible] = None,
+        end_date: Optional[IsoDateConvertible] = None,
         notification_type: Optional[Text] = None,
     ) -> JSONType:
         """The Space Weather Database Of Notifications, Knowledge, Information. Notifications API
 
         Args:
-            start_date (Optional[IsoDateConvertible], optional): Start date of data retrieved. Defaults to None.
-            end_date (Optional[IsoDateConvertible], optional): End date of data retrieved. Defaults to None.
+            start_date (Optional[IsoDateConvertible] = None, optional): Start date of data retrieved. Defaults to None.
+            end_date (Optional[IsoDateConvertible] = None, optional): End date of data retrieved. Defaults to None.
             notification_type (Optional[Text], optional): Defaults to None.
 
         Returns:

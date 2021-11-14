@@ -1,7 +1,7 @@
 import warnings
 from typing import Dict, Optional, Text, Union
 from nasa.clients.base import BaseClient
-from nasa.exceptions import InvalidNeoAPIType, MissingNeoAsteroidID
+from nasa.exceptions import NASAInvalidInput
 from nasa.typing import IsoDate, IsoDateConvertible, JSONType
 from nasa.warnings import AttributesCollussionWarning
 
@@ -23,7 +23,7 @@ class NeoClient(BaseClient):
             asteroid_id (Optional[int], optional): Asteroid SPK-ID correlates to the NASA JPL small body. Defaults to None.
 
         Raises:
-            InvalidNeoAPIType: Raises when the API Type given is invalid
+            NASAInvalidInput: Raises when the API Type given is invalid
 
         Returns:
             JSONType: Parsed response body from the API
@@ -36,10 +36,10 @@ class NeoClient(BaseClient):
         }
         if api_type not in type_path.keys():
             message: Text = f"Invalid api_type {api_type}. Valid api_type values are {tuple(type_path.keys())}"
-            raise InvalidNeoAPIType(message)
+            raise NASAInvalidInput(message)
         if api_type == "lookup" and asteroid_id is None:
             message: Text = "Missing asteroid_id"
-            raise MissingNeoAsteroidID(message)
+            raise NASAInvalidInput(message)
         if api_type == "lookup" and (start_date is not None or end_date is not None):
             message: Text = f"start_date or end_date shouldn't be filled when the api_type is {api_type}. Set them to None"
             warnings.warn(message, AttributesCollussionWarning)
@@ -80,10 +80,7 @@ class NeoClient(BaseClient):
         """
         return self.neo(api_type="feed", start_date=start_date, end_date=end_date)
 
-    def neo_lookup(
-        self,
-        asteroid_id: int,
-    ) -> JSONType:
+    def neo_lookup(self, asteroid_id: int) -> JSONType:
         """Near Earth Object Web Service Lookup Endpoint
 
         Args:
