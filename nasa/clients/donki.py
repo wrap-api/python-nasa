@@ -1,5 +1,5 @@
 from typing import Dict, Optional, Set, Text, Union
-import warnings
+from warnings import warn
 from nasa.clients.base import BaseClient
 from nasa.exceptions import NASAInvalidInput
 from nasa.typing import IsoDate, IsoDateConvertible, JSONType
@@ -12,7 +12,7 @@ class DonkiClient(BaseClient):
         api_type: Text,
         start_date: Optional[IsoDateConvertible] = None,
         end_date: Optional[IsoDateConvertible] = None,
-        most_accurate_only: bool = True,
+        most_accurate_only: Optional[bool] = None,
         speed: Optional[int] = None,
         half_angle: Optional[int] = None,
         catalog: Optional[Text] = None,
@@ -71,14 +71,14 @@ class DonkiClient(BaseClient):
             or catalog is not None
         ):
             message: Text = "CMEAnalysis query parameters shouldn't be filled when the api_type is not CMEAnalysis. Set them to None"
-            warnings.warn(message, AttributesCollussionWarning)
+            warn(message, AttributesCollussionWarning)
             most_accurate_only = None
             speed = None
             half_angle = None
             catalog = None
         if api_type != "notifications" and notification_type is not None:
             message: Text = "notification_type shouldn't be filled when the api_type is not notifications. Set it to None"
-            warnings.warn(message, AttributesCollussionWarning)
+            warn(message, AttributesCollussionWarning)
             notification_type = None
         if (
             notification_type is not None

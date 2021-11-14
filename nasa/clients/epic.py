@@ -1,5 +1,5 @@
 from typing import Dict, List, Optional, Set, Text, Union
-import warnings
+from warnings import warn
 
 from PIL.ImageFile import ImageFile
 from nasa.clients.base import BaseClient
@@ -34,7 +34,7 @@ class EpicClient(BaseClient):
         iso_date: Optional[Text] = IsoDate(date).value()
         if available and iso_date is not None:
             message: Text = "date shouldn't be filled when the available parameter is True. Set it to None"
-            warnings.warn(message, AttributesCollussionWarning)
+            warn(message, AttributesCollussionWarning)
             iso_date = None
         if image_type not in image_types:
             message: Text = f"Invalid image_type {image_type}. Valid image_type values are {tuple(image_types)}"

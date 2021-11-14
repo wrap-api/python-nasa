@@ -1,5 +1,5 @@
 from typing import Dict, Optional, Set, Text, Union
-import warnings
+from warnings import warn
 from PIL.ImageFile import ImageFile
 
 from nasa.clients.base import BaseClient
@@ -16,7 +16,7 @@ class EarthClient(BaseClient):
         lon: float,
         dim: Optional[float] = None,
         date: Optional[IsoDateConvertible] = None,
-        cloud_score: Optional[bool] = False,
+        cloud_score: Optional[bool] = None,
     ) -> Union[JSONType, ImageFile]:
         """NASA Earth API
 
@@ -40,7 +40,7 @@ class EarthClient(BaseClient):
             raise NASAInvalidInput(message)
         if api_type != "imagery" and cloud_score is not None:
             message: Text = "cloud_score shouldn't be filled if the api_type is not imagery. Set it to None"
-            warnings.warn(message, AttributesCollussionWarning)
+            warn(message, AttributesCollussionWarning)
             cloud_score = None
         iso_date: Optional[Text] = IsoDate(date).value()
         path: Text = f"/planetary/earth/{api_type}"

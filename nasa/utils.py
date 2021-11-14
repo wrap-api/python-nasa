@@ -1,5 +1,5 @@
 from io import BytesIO
-import warnings
+from warnings import warn
 from typing import Iterable, List, Optional, Text
 import requests
 from requests.models import Response
@@ -31,7 +31,7 @@ def get_url_image(url: Text, ignore_non_image: bool = False) -> Optional[ImageFi
         return image
     elif ignore_non_image:
         message: Text = u"Response Content-Type is not Image."
-        warnings.warn(message, InvalidInputWarning)
+        warn(message, InvalidInputWarning)
         return None
     else:
         message: Text = u"Response Content-Type is not Image."

@@ -1,5 +1,5 @@
 from typing import Dict, Text, Union
-import warnings
+from warnings import warn
 from nasa.clients.base import BaseClient
 from nasa.typing import JSONType
 from nasa.warnings import UnsupportedInputWarning
@@ -18,7 +18,7 @@ class InsightClient(BaseClient):
         """
         if feedtype != "json":
             message: Text = u"Currently only supports JSON. Set feedtype to JSON"
-            warnings.warn(message, UnsupportedInputWarning)
+            warn(message, UnsupportedInputWarning)
             feedtype = "json"
         path: Text = "/insight_weather"
         params: Dict[Text, Union[float, Text]] = {
