@@ -1,14 +1,7 @@
 import warnings
 from decimal import Decimal
 from datetime import date, datetime
-from typing import (
-    Dict,
-    Text,
-    Union,
-    Optional,
-    Mapping,
-    List,
-)
+from typing import Dict, Text, Union, Optional, Mapping, List
 
 from nasa.decorators import NASADecorator
 from nasa.warnings import InvalidInputWarning
@@ -16,20 +9,12 @@ from nasa.warnings import InvalidInputWarning
 
 IsoDateConvertible = Union[int, float, Decimal, Text, date, datetime]
 JSONType = Union[
-    Text,
-    int,
-    float,
-    bool,
-    None,
-    Mapping[str, "JSONType"],
-    List["JSONType"],
+    Text, int, float, bool, None, Mapping[str, "JSONType"], List["JSONType"]
 ]
 
-main_decorator: NASADecorator = NASADecorator()
+decorator: NASADecorator = NASADecorator()
 
-main_decorator.decorate_all_methods(main_decorator.catch_unidentidied_error)
-
-
+# @decorator.decorate_all_methods(decorator.catch_unidentidied_error)
 class IsoDate:
     UNIT_CONVERSION: Dict = {
         "s": 1,
@@ -60,7 +45,14 @@ class IsoDate:
             unix_seconds = arg / self.UNIT_CONVERSION.get(unit, "s")
             self.dt: datetime = datetime.utcfromtimestamp(unix_seconds)
         elif type(arg) is str:
-            self.dt: datetime = datetime.strptime(arg, format)
+            try:
+                self.dt: datetime = datetime.strptime(arg, format)
+            except ValueError:
+                message: Text = (
+                    f"time data {arg} does not match format {format}. Set to None"
+                )
+                warnings.warn(message, InvalidInputWarning)
+                self.dt: None = None
         elif type(arg) in {date, datetime}:
             self.dt: Union[date, datetime] = arg
         else:

@@ -1,3 +1,4 @@
+import inspect
 from typing import Any, Dict, Text, Tuple, Type, Callable
 
 from nasa.exceptions import NASAUnidentifiedError
@@ -15,7 +16,7 @@ class NASADecorator:
             try:
                 result: Any = function(*args, **kwargs)
             except Exception as error:
-                raise NASAUnidentifiedError(str(error))
+                raise NASAUnidentifiedError(str(error), type(error))
             else:
                 return result
 
@@ -24,9 +25,8 @@ class NASADecorator:
     @staticmethod
     def decorate_all_methods(decorator: Callable) -> Callable:
         def decorate(cls: Type):
-            for attr in dir(cls):
-                if callable(getattr(cls, attr)):
-                    setattr(cls, attr, decorator(getattr(cls, attr)))
+            for name, method in inspect.getmembers(cls, inspect.isfunction):
+                setattr(cls, name, decorator(method))
             return cls
 
         return decorate

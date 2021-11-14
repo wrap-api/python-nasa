@@ -8,7 +8,6 @@ from nasa.auth import NASAAuth
 from nasa.exceptions import NASAHTTPError
 
 from nasa.typing import JSONType
-from nasa.utils import get_url_image
 
 
 class BaseClient:
