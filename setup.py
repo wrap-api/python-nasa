@@ -4,7 +4,7 @@ import nasa
 from setuptools import setup
 
 with open("README.md") as readme_file:
-    readme = readme_file.read()
+    readme: Text = readme_file.read()
 
 requirements: List[Text] = ["requests"]
 
@@ -12,8 +12,9 @@ setup(
     name="python-nasa",
     version=nasa.__version__,
     description="Unofficial Python Wrapper for NASA API",
-    author="Faisal Malik",
-    author_email="faisalmalikwidyaprasetya@gmail.com",
+    long_description=readme,
+    author=nasa.__author__,
+    author_email=nasa.__email__,
     packages=["nasa"],
     package_dir={"nasa": "nasa"},
     include_package_data=True,
