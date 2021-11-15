@@ -21,7 +21,7 @@ setup(
     requires=requirements,
     keywords="nasa planet astronomy image galaxy earth",
     classifiers=[
-        "Development Status :: 0 - Pre-Alpha",
+        "Development Status :: 2 - Pre-Alpha",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
