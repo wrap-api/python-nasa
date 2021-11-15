@@ -9,7 +9,7 @@ with open("README.md") as readme_file:
 requirements: List[Text] = ["requests"]
 
 setup(
-    name="nasa",
+    name="python-nasa",
     version=nasa.__version__,
     description="Unofficial Python Wrapper for NASA API",
     author="Faisal Malik",
