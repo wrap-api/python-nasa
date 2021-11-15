@@ -74,7 +74,7 @@ class ApodClient(BaseClient):
             image_response: Dict[Text, Union[JSONType, Optional[ImageFile]]] = {
                 "JSON": response
             }
-            content_json: JSONType = response.json()
+            content_json: JSONType = response
             if get_image:
                 url: Text = content_json.get("url")
                 image_response["image"] = get_url_image(url)
