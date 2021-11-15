@@ -19,4 +19,13 @@ setup(
     include_package_data=True,
     license="MIT",
     requires=requirements,
+    keywords="nasa planet astronomy image galaxy earth",
+    classifiers=[
+        "Development Status :: 0 - Pre-Alpha",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
+        "Natural Language :: English",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+    ],
 )
