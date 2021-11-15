@@ -13,6 +13,7 @@ setup(
     version=nasa.__version__,
     description="Unofficial Python Wrapper for NASA API",
     long_description=readme,
+    long_description_content_type="text/markdown",
     author=nasa.__author__,
     author_email=nasa.__email__,
     packages=["nasa"],
