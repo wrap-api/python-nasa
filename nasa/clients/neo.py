@@ -1,4 +1,4 @@
-import warnings
+from warnings import warn
 from typing import Dict, Optional, Text, Union
 from nasa.clients.base import BaseClient
 from nasa.exceptions import NASAInvalidInput
@@ -42,17 +42,17 @@ class NeoClient(BaseClient):
             raise NASAInvalidInput(message)
         if api_type == "lookup" and (start_date is not None or end_date is not None):
             message: Text = f"start_date or end_date shouldn't be filled when the api_type is {api_type}. Set them to None"
-            warnings.warn(message, AttributesCollussionWarning)
+            warn(message, AttributesCollussionWarning)
             iso_start_date, iso_end_date = None, None
         elif api_type == "feed" and asteroid_id is not None:
             message: Text = f"asteroid_id shouldn't be filled when the api_type is {api_type}. Set it to None"
-            warnings.warn(message, AttributesCollussionWarning)
+            warn(message, AttributesCollussionWarning)
             asteroid_id = None
         elif api_type == "browse" and (
             asteroid_id is not None or start_date is not None or end_date is not None
         ):
             message: Text = f"start_date, end_date and asteroid_id shouldn't be filled when the api_type is {api_type}. Set them to None"
-            warnings.warn(message, AttributesCollussionWarning)
+            warn(message, AttributesCollussionWarning)
             asteroid_id, start_date, end_date = None, None, None
         path: Text = f"{base_path}{type_path.get(api_type)}"
         iso_start_date: Optional[Text] = IsoDate(start_date).value()

@@ -1,4 +1,4 @@
-import warnings
+from warnings import warn
 from typing import Dict, Optional, Text, Union
 from PIL.ImageFile import ImageFile
 
@@ -48,17 +48,17 @@ class ApodClient(BaseClient):
         if iso_date is not None:
             if iso_start_date is not None or iso_end_date is not None:
                 message: Text = "start_date or end_date shouldn't be filled when the date is filled. Set them to None"
-                warnings.warn(message, AttributesCollussionWarning)
+                warn(message, AttributesCollussionWarning)
                 iso_start_date, iso_end_date = None, None
             if count is not None:
                 message: Text = (
                     "count shouldn't be filled when the date is filled. Set it to None"
                 )
-                warnings.warn(message, AttributesCollussionWarning)
+                warn(message, AttributesCollussionWarning)
                 count = None
         if (iso_start_date is None or iso_end_date is None) and count is not None:
             message: Text = "count shouldn't be filled when the start_date or end_date are filled. Set it to None"
-            warnings.warn(message, AttributesCollussionWarning)
+            warn(message, AttributesCollussionWarning)
             count = None
 
         path: Text = "/planetary/apod"
