@@ -1,4 +1,4 @@
-name: Upload to TestPyPi
+name: Upload to PyPi
 on:
   push:
     branches:
