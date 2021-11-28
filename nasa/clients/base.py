@@ -43,15 +43,19 @@ class BaseClient:
         Returns:
             Union[JSONType, ImageFile]: Depends on the content-type of the API response
         """
+        content: Union[JSONType, ImageFile, bytes, Text]
         try:
             response.raise_for_status()
         except HTTPError as error:
             raise NASAHTTPError(error.strerror)
         content_type: Text = response.headers.get("Content-Type")
         if content_type == "application/json":
-            content: JSONType = response.json()
+            content = response.json()
         elif content_type.split("/")[0] == "image":
-            content: ImageFile = get_url_image(response.url)
+            content = get_url_image(response.url)
         else:
-            content: Text = response.text
+            if response.encoding is None:
+                content = response.content
+            else:
+                content = response.text
         return content
