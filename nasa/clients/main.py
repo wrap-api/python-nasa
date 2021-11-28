@@ -9,13 +9,10 @@ from nasa.clients.mars_rover_photos import MarsRoverPhotosClient
 from nasa.clients.neo import NeoClient
 from nasa.clients.tech_transfer import TechTransferClient
 from nasa.clients.techport import TechPortClient
-from nasa.decorators import NASADecorator
+from nasa.decorators import catch_unidentidied_error, decorate_all_methods
 
 
-decorator: NASADecorator = NASADecorator()
-
-
-# @decorator.decorate_all_methods(decorator.catch_unidentidied_error)
+@decorate_all_methods(catch_unidentidied_error)
 class Client(
     ApodClient,
     DonkiClient,
