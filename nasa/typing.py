@@ -2,8 +2,8 @@ from warnings import warn
 from decimal import Decimal
 from datetime import date, datetime
 from typing import Dict, Text, Union, Optional, Mapping, List
+from nasa.decorators import catch_unidentidied_error, decorate_all_methods
 
-from nasa.decorators import NASADecorator
 from nasa.warnings import InvalidInputWarning
 
 
@@ -12,9 +12,8 @@ JSONType = Optional[
     Union[Text, int, float, bool, Mapping[str, "JSONType"], List["JSONType"]]
 ]
 
-decorator: NASADecorator = NASADecorator()
 
-# @decorator.decorate_all_methods(decorator.catch_unidentidied_error)
+@decorate_all_methods(catch_unidentidied_error)
 class IsoDate:
     UNIT_CONVERSION: Dict = {
         "s": 1,
